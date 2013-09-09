@@ -7,3 +7,20 @@ from scrapy.item import Item, Field
 
 class TbUser(Item):
     name = Field()
+
+class TbThread(Item):
+    title = Field()
+    url = Field()
+    postnum = Field()
+
+class WbUserstatus(Item):
+    """
+    text, url, retweetnum, commentnum, pdate, favonum
+    """
+    sid = Field()
+    text = Field()
+    url = Field()
+    retweetnum = Field()
+    commentnum = Field()
+    pdate = Field()
+    favonum = Field()
