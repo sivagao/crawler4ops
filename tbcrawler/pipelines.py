@@ -14,7 +14,7 @@ connection = Connection('localhost', 27017) # the default is 27017
 db_user = connection.tbusers
 db_thread = connection.tbthreads
 db_wbuserstatus = connection.wbuserstatus
-# db['modules'].remove({}) #temporary hack - delete all records
+# db_user['modules'].remove({}) #temporary hack - delete all records
 
 class TiebaPipeline(object):
 

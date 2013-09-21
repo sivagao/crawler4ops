@@ -105,8 +105,10 @@ def get_tieba_user(tiebaname):
     app.logger.debug(request.args)
     app.logger.debug(request.path)
     offset = request.args.get('offset', 0)
-    slice10 = request.args.get('slice',False)
-    app.logger.debug(slice10)
+    _slice = request.args.get('slice',False)
+    if(_slice):
+        _slice = int(_slice)
+    app.logger.debug(_slice)
     app.logger.debug(offset)
     size = request.args.get('size', 5000)
     tiebaname = request.path.split('/')[-1]
@@ -117,10 +119,10 @@ def get_tieba_user(tiebaname):
     for e in users:
         del e['_id']
         ls.append(e['name'])
-    if(slice10):
+    if(_slice):
         ls = map(lambda x:'@'+x, ls) #这里的a同上
-        xlen = len(ls)/10
-        ls = [' '.join(ls[i*10:(i*10+10)]) for i in range(xlen)]
+        xlen = len(ls)/_slice
+        ls = [' '.join(ls[i*_slice:(i*_slice+_slice)]) for i in range(xlen)]
     return js_response_helper(json.dumps(ls))
 
 # 通过web来提交爬虫任务
@@ -132,10 +134,12 @@ def get_add_user():
 @app.route('/tieba/user/add', methods=['POST'])
 def post_add_user():
     tb = request.form['tb']
+    db_user[tb].remove()
     tb = tb.encode('gb2312')
     tb = urllib.quote(tb)
     app.logger.debug('A value for debugging: %s' % tb)
     app.logger.debug('A value for debugging form: %s' % request.form)
+    # db_user[tb].remove()
     sh.cd('/Users/ghlndsl/projects/diy_wdj/tieba_zhaohuan_crawler') #rewrite
     sh.scrapy.crawl('tb_user',a='target=%s'%tb, _bg=True) #rewrite
     return redirect(url_for('user'))
